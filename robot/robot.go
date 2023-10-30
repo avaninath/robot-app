@@ -2,7 +2,6 @@ package robot
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -47,24 +46,16 @@ func (r *robot) MoveForward(board *board.Board) error {
 	switch r.Direction {
 	case DirectionNorth:
 		r.Row--
-		if r.Row < 0 || r.Row > board.MaxRows {
-			return errors.New("the robot fell off the board")
-		}
+		return rowError(r.Row, board)
 	case DirectionSouth:
 		r.Row++
-		if r.Row < 0 || r.Row > board.MaxRows {
-			return errors.New("the robot fell off the board")
-		}
+		return rowError(r.Row, board)
 	case DirectionEast:
 		r.Column++
-		if r.Column < 0 || r.Column > board.MaxColumns {
-			return errors.New("the robot fell off the board")
-		}
+		return columnError(r.Column, board)
 	case DirectionWest:
 		r.Column--
-		if r.Column < 0 || r.Column > board.MaxColumns {
-			return errors.New("the robot fell off the board")
-		}
+		return columnError(r.Column, board)
 	}
 	return nil
 }
@@ -100,4 +91,20 @@ func (r *robot) ExecuteCommand(command string, b *board.Board) error {
 	}
 	r.Report()
 	return nil
+}
+
+func rowError(row int, b *board.Board) error {
+	if row < 0 || row > b.MaxRows {
+		return ErrRobotFellOffBoard
+	} else {
+		return nil
+	}
+}
+
+func columnError(column int, b *board.Board) error {
+	if column < 0 || column > b.MaxColumns {
+		return ErrRobotFellOffBoard
+	} else {
+		return nil
+	}
 }
