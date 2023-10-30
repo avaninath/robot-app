@@ -26,10 +26,10 @@ func main() {
 
 	fmt.Println("Please enter the commands for the robot")
 	fmt.Println("Enter the commands:")
-	commands, _ := in.ReadString('\n')
+	inputCommand, _ := in.ReadString('\n')
+	command := strings.TrimSpace(inputCommand)
 
-	fmt.Println("The commands for the robot are " + strings.TrimSpace(commands))
+	fmt.Println("The commands for the robot are " + command)
 
-	finalDirection := robot.GetNextDirection(newRbt.Direction, strings.TrimSpace(commands))
-	fmt.Println("The final direction of the robot is " + finalDirection)
+	newRbt.ExecuteCommand(command)
 }
