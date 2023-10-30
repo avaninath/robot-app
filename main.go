@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/robotAssignment/board/game"
+	"github.com/robotAssignment/game"
 )
 
 func main() {
