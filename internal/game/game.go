@@ -6,12 +6,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/robotAssignment/board"
-	"github.com/robotAssignment/robot"
+	"github.com/robotAssignment/internal/board"
+	"github.com/robotAssignment/internal/robot"
 )
 
 var in = bufio.NewReader(os.Stdin)
 
+/*
+Initiate is the entry point of the game.
+It displays the options available for the player and takes the input
+*/
 func Initiate() {
 	fmt.Println("Welcome to the Robot Game")
 	fmt.Println(strings.Repeat("-", 25))

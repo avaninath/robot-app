@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/robotAssignment/board"
+	"github.com/robotAssignment/internal/board"
 )
 
 var in = bufio.NewReader(os.Stdin)
