@@ -18,7 +18,7 @@ func main() {
 
 	// Create a new board
 	newBoard := board.Initiate()
-	fmt.Printf("\nThe size of the board is %v x %v \n", newBoard.Rows, newBoard.Columns)
+	fmt.Printf("\nThe size of the board is %v x %v \n", newBoard.MaxRows, newBoard.MaxColumns)
 
 	// Create a new robot and assign initial position
 	newRbt := robot.Initiate()
@@ -30,5 +30,9 @@ func main() {
 
 	fmt.Println("The commands for the robot are " + command)
 
-	newRbt.ExecuteCommand(command)
+	err := newRbt.ExecuteCommand(command, &newBoard)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }

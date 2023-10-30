@@ -11,8 +11,8 @@ import (
 var in = bufio.NewReader(os.Stdin)
 
 type Board struct {
-	Rows    int
-	Columns int
+	MaxRows    int
+	MaxColumns int
 }
 
 // Initiate creates a new board with the size and returns it
@@ -27,8 +27,8 @@ func Initiate() Board {
 	cInt, _ := strconv.Atoi(strings.TrimSpace(c))
 
 	board := Board{
-		Rows:    rInt,
-		Columns: cInt,
+		MaxRows:    rInt,
+		MaxColumns: cInt,
 	}
 
 	return board
