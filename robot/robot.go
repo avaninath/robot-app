@@ -27,11 +27,14 @@ func Initiate() Robot {
 	stringDirection, _ := in.ReadString('\n')
 	direction := ToDirection(strings.TrimSpace(stringDirection))
 
-	fmt.Println("The starting position of the robot is " + strings.TrimSpace(rPos) + " x " + strings.TrimSpace(cPos) + " facing " + direction.ToString())
-
 	rPosInt, _ := strconv.Atoi(strings.TrimSpace(rPos))
 	cPosInt, _ := strconv.Atoi(strings.TrimSpace(cPos))
-	robot := Robot{Row: rPosInt, Column: cPosInt, Direction: direction}
+
+	robot := Robot{
+		Row:       rPosInt,
+		Column:    cPosInt,
+		Direction: direction,
+	}
 
 	return robot
 }
@@ -78,6 +81,6 @@ func (r *Robot) ExecuteCommand(command string) {
 			r.MoveForward()
 		default:
 		}
-		r.Report()
 	}
+	r.Report()
 }
