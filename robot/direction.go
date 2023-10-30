@@ -9,10 +9,12 @@ const (
 	DirectionWest  Direction = "W"
 )
 
+// ToString converts a Direction to a string
 func (d Direction) ToString() string {
 	return string(d)
 }
 
+// ToLeft turns the robot once to the left
 func ToLeft(direction Direction) Direction {
 	switch direction {
 	case DirectionNorth:
@@ -28,6 +30,7 @@ func ToLeft(direction Direction) Direction {
 	}
 }
 
+// ToRight turns the robot once to the right
 func ToRight(direction Direction) Direction {
 	switch direction {
 	case DirectionNorth:
@@ -43,6 +46,7 @@ func ToRight(direction Direction) Direction {
 	}
 }
 
+// ToDirection converts a string to a Direction
 func ToDirection(direction string) Direction {
 	switch direction {
 	case "N":
@@ -56,16 +60,4 @@ func ToDirection(direction string) Direction {
 	default:
 		return ""
 	}
-}
-
-func GetNextDirection(direction Direction, commands string) Direction {
-	for _, command := range commands {
-		switch command {
-		case 'L':
-			direction = ToLeft(direction)
-		case 'R':
-			direction = ToRight(direction)
-		}
-	}
-	return direction
 }
