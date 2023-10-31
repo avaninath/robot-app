@@ -96,15 +96,14 @@ func (r *robot) ExecuteCommand(command string, b *board.Board) error {
 func rowError(row int, b *board.Board) error {
 	if row < 0 || row > b.MaxRows {
 		return ErrRobotFellOffBoard
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func columnError(column int, b *board.Board) error {
 	if column < 0 || column > b.MaxColumns {
 		return ErrRobotFellOffBoard
-	} else {
-		return nil
 	}
+	return nil
+
 }
