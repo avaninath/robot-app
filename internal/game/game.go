@@ -39,6 +39,7 @@ gameLoop:
 			fmt.Printf("\nThe initial position of the robot is %v, %v facing %v \n", newRbt.Row, newRbt.Column, newRbt.Direction)
 
 			// Get the commands from the user
+		commandLoop:
 			for {
 				fmt.Println("\nPlease enter the commands for the robot: (eg: FFRFFLFRRF)")
 				inputCommand, _ := in.ReadString('\n')
@@ -50,22 +51,29 @@ gameLoop:
 					fmt.Println("\nOops! The robot fell off the board. Better luck next time!")
 					break
 				} else if errors.Is(err, robot.ErrInvalidCommandInput) {
-					fmt.Println(err)
+					fmt.Println(invalidCommandInputMessageString)
 					continue
 				}
 
-				fmt.Println("\nWould you like to enter more commands for the robot? (y/n)")
-				continueGameInput, _ := in.ReadString('\n')
-				continueGameInput = strings.TrimSpace(continueGameInput)
-
-				if continueGameInput == "n" {
-					break
+				for {
+					fmt.Println("\nWould you like to enter more commands for the robot? (y/n)")
+					input, _ := in.ReadString('\n')
+					input = strings.TrimSpace(input)
+					if input != "y" && input != "n" {
+						fmt.Println("Invalid input. Please try again")
+						continue
+					}
+					if input == "y" {
+						continue commandLoop
+					} else {
+						break commandLoop
+					}
 				}
 			}
 		case "q":
 			break gameLoop
 		default:
-			fmt.Println("Unknown option")
+			fmt.Println(unknownGameOptionString)
 		}
 	}
 }

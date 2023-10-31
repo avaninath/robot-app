@@ -67,7 +67,7 @@ func Initiate(board *board.Board) Robot {
 		stringDirection, _ := in.ReadString('\n')
 		direction = ToDirection(strings.TrimSpace(strings.ToUpper(stringDirection)))
 		if !direction.IsValid() {
-			fmt.Println(ErrInvalidInputDirection)
+			fmt.Println(invalidDirectionMessageString)
 			continue
 		}
 		break
@@ -158,7 +158,6 @@ func isCloseToEdge(rbt Robot, b *board.Board) bool {
 		Direction: rbt.Direction,
 	}
 	err := newRbt.MoveForward(b)
-	fmt.Printf("\n%v", err)
 	return errors.Is(err, ErrRobotFellOffBoard)
 }
 
