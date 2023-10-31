@@ -1,7 +1,9 @@
 package robot
 
+// Direction is the type for the direction of the robot
 type Direction string
 
+// The possible directions of the robot
 const (
 	DirectionNorth Direction = "N"
 	DirectionSouth Direction = "S"
@@ -12,6 +14,22 @@ const (
 // ToString converts a Direction to a string
 func (d Direction) ToString() string {
 	return string(d)
+}
+
+// IsValid checks if the input for direction is valid
+func (d Direction) IsValid() bool {
+	switch d {
+	case DirectionNorth:
+		return true
+	case DirectionSouth:
+		return true
+	case DirectionEast:
+		return true
+	case DirectionWest:
+		return true
+	default:
+		return false
+	}
 }
 
 // ToLeft turns the robot once to the left
@@ -58,6 +76,6 @@ func ToDirection(direction string) Direction {
 	case "W":
 		return DirectionWest
 	default:
-		return ""
+		return "Invalid input"
 	}
 }

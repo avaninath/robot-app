@@ -2,6 +2,7 @@ package game
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -17,10 +18,10 @@ Initiate is the entry point of the game.
 It displays the options available for the player and takes the input
 */
 func Initiate() {
-	fmt.Println("Welcome to the Robot Game")
+	fmt.Println("\nWelcome to the Robot Game")
 	fmt.Println(strings.Repeat("-", 25))
 
-loop:
+gameLoop:
 	for {
 		fmt.Println("Please select an option")
 		fmt.Println("1) Start a new game")
@@ -34,24 +35,35 @@ loop:
 			fmt.Printf("\nThe size of the board is %v x %v \n", newBoard.MaxRows, newBoard.MaxColumns)
 
 			// Create a new robot and assign initial position
-			newRbt := robot.Initiate()
+			newRbt := robot.Initiate(&newBoard)
 			fmt.Printf("\nThe initial position of the robot is %v, %v facing %v \n", newRbt.Row, newRbt.Column, newRbt.Direction)
 
 			// Get the commands from the user
 			for {
 				fmt.Println("\nPlease enter the commands for the robot: (eg: FFRFFLFRRF)")
 				inputCommand, _ := in.ReadString('\n')
-				command := strings.TrimSpace(inputCommand)
+				inputCommand = strings.TrimSpace(inputCommand)
 
-				fmt.Println("The commands for the robot are " + command)
-				err := newRbt.ExecuteCommand(command, &newBoard)
-				if err != nil {
+				// Validates and execute the input commands
+				err := newRbt.ExecuteCommand(inputCommand, &newBoard)
+				if errors.Is(err, robot.ErrRobotFellOffBoard) {
+					fmt.Println("\nOops! The robot fell off the board. Better luck next time!")
+					break
+				} else if errors.Is(err, robot.ErrInvalidCommandInput) {
 					fmt.Println(err)
+					continue
+				}
+
+				fmt.Println("\nWould you like to enter more commands for the robot? (y/n)")
+				continueGameInput, _ := in.ReadString('\n')
+				continueGameInput = strings.TrimSpace(continueGameInput)
+
+				if continueGameInput == "n" {
 					break
 				}
 			}
 		case "q":
-			break loop
+			break gameLoop
 		default:
 			fmt.Println("Unknown option")
 		}

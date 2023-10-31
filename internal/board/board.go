@@ -10,6 +10,7 @@ import (
 
 var in = bufio.NewReader(os.Stdin)
 
+// Board is a struct that holds the size of the board
 type Board struct {
 	MaxRows    int
 	MaxColumns int
@@ -17,14 +18,31 @@ type Board struct {
 
 // Initiate creates a new board with the size and returns it
 func Initiate() Board {
-	fmt.Println("Please enter the size of the board")
-	fmt.Println("Enter the number of rows of the room:")
-	r, _ := in.ReadString('\n')
-	fmt.Println("Enter the number of columns of the room:")
-	c, _ := in.ReadString('\n')
+	var (
+		rInt, cInt int
+		err        error
+	)
+	fmt.Println("\nLet's create a new board!")
 
-	rInt, _ := strconv.Atoi(strings.TrimSpace(r))
-	cInt, _ := strconv.Atoi(strings.TrimSpace(c))
+	for {
+		fmt.Println("\nEnter the number of rows of the room:")
+		r, _ := in.ReadString('\n')
+		rInt, err = strconv.Atoi(strings.TrimSpace(r))
+		if err == nil {
+			break
+		}
+		fmt.Println(ErrInvalidInputRows)
+	}
+
+	for {
+		fmt.Println("\nEnter the number of columns of the room:")
+		c, _ := in.ReadString('\n')
+		cInt, err = strconv.Atoi(strings.TrimSpace(c))
+		if err == nil {
+			break
+		}
+		fmt.Println(ErrInvalidInputColumns)
+	}
 
 	board := Board{
 		MaxRows:    rInt,
