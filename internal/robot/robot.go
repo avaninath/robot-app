@@ -2,6 +2,7 @@ package robot
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -109,8 +110,18 @@ func (r *Robot) TurnRight() {
 	r.Direction = ToRight(r.Direction)
 }
 
-// Report prints the current position and direction of the robot
-func (r *Robot) Report() {
+// Report prints the current position and direction of the robot and issues a warning if it is close to the edge or a corner
+func (r *Robot) Report(b *board.Board) {
+	// Check if robot is close to edge or corner and issue warning message
+	corner := r.checkCornerPosition(b)
+	if corner != "" {
+		dangerDirections := getCornerDirections(corner)
+		fmt.Printf("\n%s Danger in directions: %v ", warningMessage(), dangerDirections)
+	} else if isCloseToEdge(*r, b) {
+		fmt.Printf("\n%s Danger in direction: %v ", warningMessage(), r.Direction.ToString())
+	}
+
+	// Report back the position and direction of the robot
 	fmt.Printf("\nThe robot is at position %v x %v facing %v", strconv.Itoa(r.Row), strconv.Itoa(r.Column), r.Direction.ToString())
 }
 
@@ -136,13 +147,35 @@ func (r *Robot) ExecuteCommand(command string, b *board.Board) error {
 			}
 		}
 	}
-	r.Report()
+	r.Report(b)
 	return nil
+}
+
+func isCloseToEdge(rbt Robot, b *board.Board) bool {
+	newRbt := Robot{
+		Row:       rbt.Row,
+		Column:    rbt.Column,
+		Direction: rbt.Direction,
+	}
+	err := newRbt.MoveForward(b)
+	fmt.Printf("\n%v", err)
+	return errors.Is(err, ErrRobotFellOffBoard)
+}
+
+func (r *Robot) checkCornerPosition(b *board.Board) Corner {
+	cornerCoordinates := getBoardCornerCoordinates(b)
+	for boardCorner, boardCorners := range cornerCoordinates {
+		for _, coordinates := range boardCorners {
+			if r.Row == coordinates.row && r.Column == coordinates.column {
+				return boardCorner
+			}
+		}
+	}
+	return ""
 }
 
 func outOfBoundError(row, column int, b *board.Board) error {
 	if row < 0 || row > b.MaxRows || column < 0 || column > b.MaxColumns {
-		fmt.Printf("\nThe resulting position of the robot was %v x %v \n", row, column)
 		return fmt.Errorf("%w", ErrRobotFellOffBoard)
 	}
 	return nil
