@@ -1,58 +1,163 @@
 package robot
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/robotAssignment/internal/board"
 )
 
-func TestInitiate(t *testing.T) {
-	type args struct {
-		board *board.Board
-	}
+func TestRobot_MoveForward(t *testing.T) {
 	tests := []struct {
-		name string
-		args args
-		want Robot
+		skip     bool
+		name     string
+		newRobot *Robot
+		wantErr  bool
 	}{
-		// TODO: Add test cases.
+		{
+			skip: false,
+			name: "MoveForward North - OK",
+			newRobot: &Robot{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionNorth,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "MoveForward South - OK",
+			newRobot: &Robot{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionSouth,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "MoveForward East - OK",
+			newRobot: &Robot{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionEast,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "MoveForward West - OK",
+			newRobot: &Robot{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionWest,
+			},
+			wantErr: false,
+		},
+		{
+			skip: false,
+			name: "MoveForward North - Out of bound",
+			newRobot: &Robot{
+				Row:       0,
+				Column:    1,
+				Direction: DirectionNorth,
+			},
+			wantErr: true,
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Initiate(tt.args.board); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Initiate() = %v, want %v", got, tt.want)
+	for _, test := range tests {
+		if test.skip {
+			continue
+		}
+		t.Run(test.name, func(t *testing.T) {
+			newBoardoard := board.Board{
+				MaxRows:    5,
+				MaxColumns: 5,
+			}
+			if err := test.newRobot.MoveForward(&newBoardoard); (err != nil) != test.wantErr {
+				t.Errorf("Robot.MoveForward() error = %v, wantErr %v", err, test.wantErr)
 			}
 		})
 	}
 }
 
-func TestRobot_MoveForward(t *testing.T) {
-	type fields struct {
-		Row       int
-		Column    int
-		Direction Direction
-	}
-	type args struct {
-		board *board.Board
-	}
+func Test_validateCommandInput(t *testing.T) {
 	tests := []struct {
+		skip    bool
 		name    string
-		fields  fields
-		args    args
+		command string
+		wantErr bool
+		err     error
+	}{
+		{
+			skip:    false,
+			name:    "ValidateCommandInput - OK",
+			command: "LRF",
+			wantErr: false,
+			err:     nil,
+		},
+		{
+			skip:    false,
+			name:    "ValidateCommandInput - Return ErrInvalidCommandInput when command is invalid",
+			command: "LRFK",
+			wantErr: true,
+			err:     ErrInvalidCommandInput,
+		},
+	}
+	for _, test := range tests {
+		if test.skip {
+			continue
+		}
+		t.Run(test.name, func(t *testing.T) {
+			if err := validateCommandInput(test.command); (err != nil) != test.wantErr {
+				t.Errorf("validateCommandInput() error = %v, wantErr %v", err, test.wantErr)
+			}
+		})
+	}
+}
+
+func TestRobot_ExecuteCommand(t *testing.T) {
+	tests := []struct {
+		skip    bool
+		name    string
+		command string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			skip:    false,
+			name:    "ExecuteCommand - OK",
+			command: "LRF",
+			wantErr: false,
+		},
+		{
+			skip:    false,
+			name:    "ExecuteCommand - Return ErrInvalidCommandInput when command is invalid",
+			command: "LRFK",
+			wantErr: true,
+		},
+		{
+			skip:    false,
+			name:    "ExecuteCommand - Return ErrRobotFellOffBoard when robot is out of bound",
+			command: "FFFFF",
+			wantErr: true,
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &Robot{
-				Row:       tt.fields.Row,
-				Column:    tt.fields.Column,
-				Direction: tt.fields.Direction,
+	for _, test := range tests {
+		if test.skip {
+			continue
+		}
+		t.Run(test.name, func(t *testing.T) {
+			newBoardoard := board.Board{
+				MaxRows:    5,
+				MaxColumns: 5,
 			}
-			if err := r.MoveForward(tt.args.board); (err != nil) != tt.wantErr {
-				t.Errorf("Robot.MoveForward() error = %v, wantErr %v", err, tt.wantErr)
+			newRobot := Robot{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionNorth,
+			}
+
+			if err := newRobot.ExecuteCommand(test.command, &newBoardoard); (err != nil) != test.wantErr {
+				t.Errorf("Robot.ExecuteCommand() error = %v, wantErr %v", err, test.wantErr)
 			}
 		})
 	}
@@ -68,124 +173,50 @@ func TestRobot_Report(t *testing.T) {
 		b *board.Board
 	}
 	tests := []struct {
+		skip   bool
 		name   string
 		fields fields
 		args   args
 	}{
-		// TODO: Add test cases.
+		{
+			skip: false,
+			name: "Report - OK",
+			fields: fields{
+				Row:       1,
+				Column:    1,
+				Direction: DirectionNorth,
+			},
+			args: args{
+				b: &board.Board{
+					MaxRows:    5,
+					MaxColumns: 5,
+				},
+			},
+		},
+		{
+			skip: false,
+			name: "Report when corner - OK",
+			fields: fields{
+				Row:       0,
+				Column:    0,
+				Direction: DirectionNorth,
+			},
+			args: args{
+				b: &board.Board{
+					MaxRows:    5,
+					MaxColumns: 5,
+				},
+			},
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			r := &Robot{
-				Row:       tt.fields.Row,
-				Column:    tt.fields.Column,
-				Direction: tt.fields.Direction,
+				Row:       test.fields.Row,
+				Column:    test.fields.Column,
+				Direction: test.fields.Direction,
 			}
-			r.Report(tt.args.b)
-		})
-	}
-}
-
-func TestRobot_ExecuteCommand(t *testing.T) {
-	type fields struct {
-		Row       int
-		Column    int
-		Direction Direction
-	}
-	type args struct {
-		command string
-		b       *board.Board
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &Robot{
-				Row:       tt.fields.Row,
-				Column:    tt.fields.Column,
-				Direction: tt.fields.Direction,
-			}
-			if err := r.ExecuteCommand(tt.args.command, tt.args.b); (err != nil) != tt.wantErr {
-				t.Errorf("Robot.ExecuteCommand() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func Test_isCloseToEdge(t *testing.T) {
-	type args struct {
-		rbt Robot
-		b   *board.Board
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := isCloseToEdge(tt.args.rbt, tt.args.b); got != tt.want {
-				t.Errorf("isCloseToEdge() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestRobot_checkCornerPosition(t *testing.T) {
-	type fields struct {
-		Row       int
-		Column    int
-		Direction Direction
-	}
-	type args struct {
-		b *board.Board
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   Corner
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &Robot{
-				Row:       tt.fields.Row,
-				Column:    tt.fields.Column,
-				Direction: tt.fields.Direction,
-			}
-			if got := r.checkCornerPosition(tt.args.b); got != tt.want {
-				t.Errorf("Robot.checkCornerPosition() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_validateCommandInput(t *testing.T) {
-	type args struct {
-		command string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := validateCommandInput(tt.args.command); (err != nil) != tt.wantErr {
-				t.Errorf("validateCommandInput() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			r.Report(test.args.b)
 		})
 	}
 }
