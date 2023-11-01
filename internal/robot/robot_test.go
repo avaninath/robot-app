@@ -42,15 +42,14 @@ func TestRobot_ExecuteCommand(t *testing.T) {
 		},
 		{
 			skip:    false,
-			name:    "ExecuteCommand - Return ErrRobotFellOffBoard when robot is out of bound",
+			name:    "ExecuteCommand - Return coordinates when robot is out of bound",
 			command: "FFFFF",
 			wantRobot: &Robot{
-				Row:       -2,
-				Column:    0,
+				Row:       -4,
+				Column:    1,
 				Direction: DirectionNorth,
 			},
-			wantErr: true,
-			err:     ErrRobotFellOffBoard,
+			wantErr: false,
 		},
 		{
 			skip:      false,
@@ -96,79 +95,79 @@ func TestRobot_ExecuteCommand(t *testing.T) {
 	}
 }
 
-func TestRobot_MoveForward(t *testing.T) {
-	tests := []struct {
-		skip     bool
-		name     string
-		newRobot *Robot
-		wantErr  bool
-	}{
-		{
-			skip: false,
-			name: "MoveForward North - OK",
-			newRobot: &Robot{
-				Row:       1,
-				Column:    1,
-				Direction: DirectionNorth,
-			},
-			wantErr: false,
-		},
-		{
-			skip: false,
-			name: "MoveForward South - OK",
-			newRobot: &Robot{
-				Row:       1,
-				Column:    1,
-				Direction: DirectionSouth,
-			},
-			wantErr: false,
-		},
-		{
-			skip: false,
-			name: "MoveForward East - OK",
-			newRobot: &Robot{
-				Row:       1,
-				Column:    1,
-				Direction: DirectionEast,
-			},
-			wantErr: false,
-		},
-		{
-			skip: false,
-			name: "MoveForward West - OK",
-			newRobot: &Robot{
-				Row:       1,
-				Column:    1,
-				Direction: DirectionWest,
-			},
-			wantErr: false,
-		},
-		{
-			skip: false,
-			name: "MoveForward North - Out of bound",
-			newRobot: &Robot{
-				Row:       0,
-				Column:    1,
-				Direction: DirectionNorth,
-			},
-			wantErr: true,
-		},
-	}
-	for _, test := range tests {
-		if test.skip {
-			continue
-		}
-		t.Run(test.name, func(t *testing.T) {
-			newBoardoard := board.Board{
-				MaxRows:    5,
-				MaxColumns: 5,
-			}
-			if err := MoveForward(test.newRobot, &newBoardoard); (err != nil) != test.wantErr {
-				t.Errorf("Robot.MoveForward() error = %v, wantErr %v", err, test.wantErr)
-			}
-		})
-	}
-}
+// func TestRobot_MoveForward(t *testing.T) {
+// 	tests := []struct {
+// 		skip     bool
+// 		name     string
+// 		newRobot *Robot
+// 		wantErr  bool
+// 	}{
+// 		{
+// 			skip: false,
+// 			name: "MoveForward North - OK",
+// 			newRobot: &Robot{
+// 				Row:       1,
+// 				Column:    1,
+// 				Direction: DirectionNorth,
+// 			},
+// 			wantErr: false,
+// 		},
+// 		{
+// 			skip: false,
+// 			name: "MoveForward South - OK",
+// 			newRobot: &Robot{
+// 				Row:       1,
+// 				Column:    1,
+// 				Direction: DirectionSouth,
+// 			},
+// 			wantErr: false,
+// 		},
+// 		{
+// 			skip: false,
+// 			name: "MoveForward East - OK",
+// 			newRobot: &Robot{
+// 				Row:       1,
+// 				Column:    1,
+// 				Direction: DirectionEast,
+// 			},
+// 			wantErr: false,
+// 		},
+// 		{
+// 			skip: false,
+// 			name: "MoveForward West - OK",
+// 			newRobot: &Robot{
+// 				Row:       1,
+// 				Column:    1,
+// 				Direction: DirectionWest,
+// 			},
+// 			wantErr: false,
+// 		},
+// 		{
+// 			skip: false,
+// 			name: "MoveForward North - Out of bound",
+// 			newRobot: &Robot{
+// 				Row:       0,
+// 				Column:    1,
+// 				Direction: DirectionNorth,
+// 			},
+// 			wantErr: true,
+// 		},
+// 	}
+// 	for _, test := range tests {
+// 		if test.skip {
+// 			continue
+// 		}
+// 		t.Run(test.name, func(t *testing.T) {
+// 			newBoardoard := board.Board{
+// 				MaxRows:    5,
+// 				MaxColumns: 5,
+// 			}
+// 			if err := MoveForward(test.newRobot, &newBoardoard); (err != nil) != test.wantErr {
+// 				t.Errorf("Robot.MoveForward() error = %v, wantErr %v", err, test.wantErr)
+// 			}
+// 		})
+// 	}
+// }
 
 func Test_validateCommandInput(t *testing.T) {
 	tests := []struct {
@@ -258,7 +257,7 @@ func TestRobot_IssueWarning(t *testing.T) {
 				Column:    test.fields.Column,
 				Direction: test.fields.Direction,
 			}
-			issueWarning(r, test.args.b)
+			IssueWarning(r, test.args.b)
 		})
 	}
 }

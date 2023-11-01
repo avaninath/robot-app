@@ -2,7 +2,6 @@ package robot
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -82,26 +81,21 @@ func Initiate(board *board.Board) Robot {
 }
 
 // MoveForward moves the robot one step forward in the direction it is facing
-func MoveForward(r *Robot, board *board.Board) error {
+func MoveForward(r *Robot, board *board.Board) {
 	switch r.Direction {
 	case DirectionNorth:
 		r.Row--
-		return outOfBoundError(r.Row, r.Column, board)
 	case DirectionSouth:
 		r.Row++
-		return outOfBoundError(r.Row, r.Column, board)
 	case DirectionEast:
 		r.Column++
-		return outOfBoundError(r.Row, r.Column, board)
 	case DirectionWest:
 		r.Column--
-		return outOfBoundError(r.Row, r.Column, board)
 	}
-	return nil
 }
 
 // Report prints the current position and direction of the robot and issues a warning if it is close to the edge or a corner
-func issueWarning(r *Robot, b *board.Board) {
+func IssueWarning(r *Robot, b *board.Board) {
 	// Check if robot is close to edge or corner and issue warning message
 	corner := checkCornerPosition(r, b)
 	if corner != "" {
@@ -128,13 +122,10 @@ func ExecuteCommand(command string, r *Robot, b *board.Board) (*Robot, error) {
 		} else if c == 'R' {
 			r.Direction = ToRight(r.Direction)
 		} else if c == 'F' {
-			err := MoveForward(r, b)
-			if err != nil {
-				return nil, err
-			}
+			MoveForward(r, b)
 		}
 	}
-	issueWarning(r, b)
+	// issueWarning(r, b)
 	return r, nil
 }
 
@@ -144,8 +135,12 @@ func isCloseToEdge(rbt Robot, b *board.Board) bool {
 		Column:    rbt.Column,
 		Direction: rbt.Direction,
 	}
-	err := MoveForward(&newRbt, b)
-	return errors.Is(err, ErrRobotFellOffBoard)
+	MoveForward(&newRbt, b)
+	if newRbt.Row < 0 || newRbt.Row >= b.MaxRows || newRbt.Column < 0 || newRbt.Column >= b.MaxColumns {
+		return true
+	}
+	return false
+
 }
 
 func checkCornerPosition(r *Robot, b *board.Board) Corner {
@@ -158,13 +153,6 @@ func checkCornerPosition(r *Robot, b *board.Board) Corner {
 		}
 	}
 	return ""
-}
-
-func outOfBoundError(row, column int, b *board.Board) error {
-	if row < 0 || row >= b.MaxRows || column < 0 || column >= b.MaxColumns {
-		return fmt.Errorf("%w", ErrRobotFellOffBoard)
-	}
-	return nil
 }
 
 func validateCommandInput(command string) error {

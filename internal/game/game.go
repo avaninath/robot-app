@@ -47,7 +47,7 @@ gameLoop:
 
 				// Validates and execute the input commands
 				newRobotPosition, err := robot.ExecuteCommand(inputCommand, &newRbt, &newBoard)
-				if errors.Is(err, robot.ErrRobotFellOffBoard) {
+				if checkRobotPosition(newRobotPosition, &newBoard) != nil {
 					fmt.Println("\nOops! The robot fell off the board. Better luck next time!")
 					fmt.Printf("\nThe final position of the robot was %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 					break
@@ -55,8 +55,9 @@ gameLoop:
 					fmt.Println(invalidCommandInputMessageString)
 					continue
 				}
+				robot.IssueWarning(newRobotPosition, &newBoard)
 
-				fmt.Printf("\nREPORT:\nThe final position of the robot is %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
+				fmt.Printf("\n\nREPORT:\nThe final position of the robot is %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 
 				for {
 					fmt.Println("\nWould you like to enter more commands for the robot? (y/n)")
@@ -79,4 +80,11 @@ gameLoop:
 			fmt.Println(unknownGameOptionString)
 		}
 	}
+}
+
+func checkRobotPosition(rbt *robot.Robot, brd *board.Board) error {
+	if rbt.Row < 0 || rbt.Row >= brd.MaxRows || rbt.Column < 0 || rbt.Column >= brd.MaxColumns {
+		return robot.ErrRobotFellOffBoard
+	}
+	return nil
 }
