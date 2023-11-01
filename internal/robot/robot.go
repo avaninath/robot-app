@@ -174,7 +174,7 @@ func (r *Robot) checkCornerPosition(b *board.Board) Corner {
 }
 
 func outOfBoundError(row, column int, b *board.Board) error {
-	if row < 0 || row > b.MaxRows || column < 0 || column > b.MaxColumns {
+	if row < 0 || row >= b.MaxRows || column < 0 || column >= b.MaxColumns {
 		return fmt.Errorf("%w", ErrRobotFellOffBoard)
 	}
 	return nil
