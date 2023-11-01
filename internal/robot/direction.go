@@ -19,13 +19,10 @@ func (d Direction) ToString() string {
 // IsValid checks if the input for direction is valid
 func (d Direction) IsValid() bool {
 	switch d {
-	case DirectionNorth:
-		return true
-	case DirectionSouth:
-		return true
-	case DirectionEast:
-		return true
-	case DirectionWest:
+	case DirectionNorth,
+		DirectionSouth,
+		DirectionEast,
+		DirectionWest:
 		return true
 	default:
 		return false
