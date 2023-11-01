@@ -82,7 +82,7 @@ func Initiate(board *board.Board) Robot {
 }
 
 // MoveForward moves the robot one step forward in the direction it is facing
-func (r *Robot) MoveForward(board *board.Board) error {
+func MoveForward(r *Robot, board *board.Board) error {
 	switch r.Direction {
 	case DirectionNorth:
 		r.Row--
@@ -100,36 +100,23 @@ func (r *Robot) MoveForward(board *board.Board) error {
 	return nil
 }
 
-// TurnLeft turns the robot once to the left
-func (r *Robot) TurnLeft() {
-	r.Direction = ToLeft(r.Direction)
-}
-
-// TurnRight turns the robot once to the right
-func (r *Robot) TurnRight() {
-	r.Direction = ToRight(r.Direction)
-}
-
 // Report prints the current position and direction of the robot and issues a warning if it is close to the edge or a corner
-func (r *Robot) Report(b *board.Board) {
+func issueWarning(r *Robot, b *board.Board) {
 	// Check if robot is close to edge or corner and issue warning message
-	corner := r.checkCornerPosition(b)
+	corner := checkCornerPosition(r, b)
 	if corner != "" {
 		dangerDirections := getCornerDirections(corner)
 		fmt.Printf("\n%s Danger in directions: %v ", warningMessage(), dangerDirections)
 	} else if isCloseToEdge(*r, b) {
 		fmt.Printf("\n%s Danger in direction: %v ", warningMessage(), r.Direction.ToString())
 	}
-
-	// Report back the position and direction of the robot
-	fmt.Printf("\nThe robot is at position %v x %v facing %v", strconv.Itoa(r.Row), strconv.Itoa(r.Column), r.Direction.ToString())
 }
 
 // ExecuteCommand executes the set of commands given to the robot
-func (r *Robot) ExecuteCommand(command string, b *board.Board) error {
+func ExecuteCommand(command string, r *Robot, b *board.Board) (*Robot, error) {
 	err := validateCommandInput(command)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	command = strings.ToUpper(command)
@@ -137,18 +124,18 @@ func (r *Robot) ExecuteCommand(command string, b *board.Board) error {
 
 	for _, c := range command {
 		if c == 'L' {
-			r.TurnLeft()
+			r.Direction = ToLeft(r.Direction)
 		} else if c == 'R' {
-			r.TurnRight()
+			r.Direction = ToRight(r.Direction)
 		} else if c == 'F' {
-			err := r.MoveForward(b)
+			err := MoveForward(r, b)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 	}
-	r.Report(b)
-	return nil
+	issueWarning(r, b)
+	return r, nil
 }
 
 func isCloseToEdge(rbt Robot, b *board.Board) bool {
@@ -157,11 +144,11 @@ func isCloseToEdge(rbt Robot, b *board.Board) bool {
 		Column:    rbt.Column,
 		Direction: rbt.Direction,
 	}
-	err := newRbt.MoveForward(b)
+	err := MoveForward(&newRbt, b)
 	return errors.Is(err, ErrRobotFellOffBoard)
 }
 
-func (r *Robot) checkCornerPosition(b *board.Board) Corner {
+func checkCornerPosition(r *Robot, b *board.Board) Corner {
 	cornerCoordinates := getBoardCornerCoordinates(b)
 	for boardCorner, boardCorners := range cornerCoordinates {
 		for _, coordinates := range boardCorners {

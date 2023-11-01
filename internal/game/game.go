@@ -46,14 +46,17 @@ gameLoop:
 				inputCommand = strings.TrimSpace(inputCommand)
 
 				// Validates and execute the input commands
-				err := newRbt.ExecuteCommand(inputCommand, &newBoard)
+				newRobotPosition, err := robot.ExecuteCommand(inputCommand, &newRbt, &newBoard)
 				if errors.Is(err, robot.ErrRobotFellOffBoard) {
 					fmt.Println("\nOops! The robot fell off the board. Better luck next time!")
+					fmt.Printf("\nThe final position of the robot was %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 					break
 				} else if errors.Is(err, robot.ErrInvalidCommandInput) {
 					fmt.Println(invalidCommandInputMessageString)
 					continue
 				}
+
+				fmt.Printf("\nREPORT:\nThe final position of the robot is %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 
 				for {
 					fmt.Println("\nWould you like to enter more commands for the robot? (y/n)")
