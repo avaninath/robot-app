@@ -37,7 +37,7 @@ func Initiate(board *board.Board) Robot {
 			fmt.Println(ErrInvalidInputRows)
 			continue
 		}
-		if rPosInt < 0 || rPosInt > board.MaxRows {
+		if rPosInt < 0 || rPosInt >= board.MaxRows {
 			fmt.Println(ErrOutOfBoundInputRows)
 			continue
 		}
@@ -53,7 +53,7 @@ func Initiate(board *board.Board) Robot {
 			fmt.Println(ErrInvalidInputColumns)
 			continue
 		}
-		if cPosInt < 0 || cPosInt > board.MaxColumns {
+		if cPosInt < 0 || cPosInt >= board.MaxColumns {
 			fmt.Println(ErrOutOfBoundInputColumns)
 			continue
 		}

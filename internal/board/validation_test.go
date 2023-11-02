@@ -24,6 +24,18 @@ func Test_validateUserInput(t *testing.T) {
 			want:    0,
 			wantErr: true,
 		},
+		{
+			skip:    false,
+			name:    "validateUserInput - negative input",
+			input:   "-1",
+			wantErr: true,
+		},
+		{
+			skip:    false,
+			name:    "validateUserInput - zero input",
+			input:   "0",
+			wantErr: true,
+		},
 	}
 	for _, test := range tests {
 		if test.skip {
