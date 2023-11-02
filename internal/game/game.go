@@ -47,16 +47,15 @@ gameLoop:
 
 				// Validates and execute the input commands
 				newRobotPosition, err := robot.ExecuteCommand(inputCommand, &newRbt, &newBoard)
-				if checkRobotPosition(newRobotPosition, &newBoard) != nil {
+				if errors.Is(err, robot.ErrInvalidCommandInput) {
+					fmt.Println(invalidCommandInputMessageString)
+					continue
+				} else if checkRobotPosition(newRobotPosition, &newBoard) != nil {
 					fmt.Println("\nOops! The robot fell off the board. Better luck next time!")
 					fmt.Printf("\nThe final position of the robot was %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 					break
-				} else if errors.Is(err, robot.ErrInvalidCommandInput) {
-					fmt.Println(invalidCommandInputMessageString)
-					continue
 				}
 				robot.IssueWarning(newRobotPosition, &newBoard)
-
 				fmt.Printf("\n\nREPORT:\nThe final position of the robot is %v, %v facing %v \n", newRobotPosition.Row, newRobotPosition.Column, newRobotPosition.Direction)
 
 				for {
