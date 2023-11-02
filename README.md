@@ -68,7 +68,7 @@ To run tests, run the following command
   cd my-project && make test
 ```
 ## Screenshots
-![GameDesign](assets/robot.png)
+
 
 ## DemoPlayList
 
