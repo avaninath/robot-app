@@ -126,7 +126,7 @@ To run tests, run the following command
 
 
 ## Screenshots
-![robot](https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/c49d8e72-7e40-4570-9536-c60892f4ae23)
+https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/c49d8e72-7e40-4570-9536-c60892f4ae23
 
 
 ## DemoPlayList
