@@ -102,12 +102,13 @@ The robot is programmed to issue a warning to the user if it is close to any edg
 - Start docker container and play the game:
 ```docker run -it avaninath/robot-app:manifest-multi-arch```
 
+
 **Option 2**
 *Note:* *This requires Go & dependencies to be installed on the machine*
 
 - Clone the project from GitHub
 
-```git clone https://link-to-project```
+```git clone https://github.com/avaninath/robotAssignmentDevoTeam.git```
 
 Go to the project directory
 
@@ -121,9 +122,7 @@ Start the app locally and play the game:
 ## Running Tests​
 To run tests, run the following command
 
-```bash
-  cd my-project && make test
-```
+```cd robotAssignmentDevoTeam && make test```
 
 
 ## Screenshots
@@ -138,5 +137,3 @@ https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/970e5263-92
 
 
 https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/2e32e95f-6b68-4b03-939e-8696df5c289d
-
-
