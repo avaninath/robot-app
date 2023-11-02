@@ -74,3 +74,10 @@ To run tests, run the following command
 
 https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/db352136-7f9e-4d82-bb54-48ef691bf793
 
+
+https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/970e5263-92e0-49ab-8d67-54572e8f4aa9
+
+
+https://github.com/avaninath/robotAssignmentDevoTeam/assets/55435998/2e32e95f-6b68-4b03-939e-8696df5c289d
+
+
