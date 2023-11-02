@@ -68,4 +68,7 @@ To run tests, run the following command
   cd my-project && make test
 ```
 ## Screenshots
-![GameDesign](robot.png)
+![GameDesign](assets/robot.png)
+
+## DemoPlayList
+![](assets/corning_warning_demo.mov)
