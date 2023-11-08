@@ -109,11 +109,11 @@ The robot is programmed to issue a warning to the user if it is close to any edg
 
 - Clone the project from GitHub
 
-```git clone https://github.com/avaninath/robotAssignmentDevoTeam.git```
+```git clone https://github.com/avaninath/robot-app.git```
 
 Go to the project directory
 
-```cd robotAssignmentDevoTeam```
+```cd robot-app```
 
 Start the app locally and play the game:
 
