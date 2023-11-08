@@ -104,6 +104,7 @@ The robot is programmed to issue a warning to the user if it is close to any edg
 
 
 **Option 2**
+
 *Note:* *This requires Go & dependencies to be installed on the machine*
 
 - Clone the project from GitHub
@@ -122,7 +123,7 @@ Start the app locally and play the game:
 ## Running Tests​
 To run tests, run the following command
 
-```cd robotAssignmentDevoTeam && make test```
+```cd robot-app && make test```
 
 
 ## Screenshots
